@@ -206,7 +206,7 @@ self.causal: bool = config.causal
 
 按照DeepMind的Chinchilla 缩放定律(Hoffmann, J., Borgeaud, S., Mensch, A., et al. (2022). Training Compute-Optimal Large Language Models. arXiv preprint arXiv:2203.15556.)
 
-DeepMind 通过实验拟合得出，在给定训练总算力（FLOPs）的约束下，为了达到最优的训练效果（即模型损失最小），模型的参数量（$N$）与训练数据的 Token 数量（$D$）应当成等比例缩放。其推导出的“算力最优前沿”（Compute-Optimal Frontier）的经验法则公式为：
+DeepMind 通过实验拟合得出，在给定训练总算力（FLOPs）的约束下，为了达到最优的训练效果（即模型损失最小），模型的参数量（N）与训练数据的 Token 数量（D）应当成等比例缩放。其推导出的“算力最优前沿”（Compute-Optimal Frontier）的经验法则公式为：
 
 $$D \approx 20 \times N$$
 
@@ -228,7 +228,7 @@ $$N = \frac{102,000,000}{20} = 5,100,000$$
 
 ### 模型
 
-目前还没有完全搞清楚如何针对当前任务设计最合适的模型，后续我会参考大语言模型给的一份方案来展开：
+目前还没有完全搞清楚如何针对当前任务设计最合适的模型，大语言模型给的一份方案参考：
 
 ```json
 {
