@@ -166,7 +166,7 @@ self.causal: bool = config.causal
 
 ### 模型架构选择
 
-既然DeBERTa架构在中文最小对评测上表现比较好，后续我打算尝试不同大小的DeBERTa-v2架构在Chinese BabyLM上的表现。
+既然DeBERTa架构在目前已经评测的任务上表现比较好，后续我打算尝试不同大小的DeBERTa-v2架构在Chinese BabyLM上的表现。
 
 ### 模型大小选择
 
