@@ -4,7 +4,7 @@
 
 1.学习和了解BabyLM测评大赛的规则和评测指标
 
-2.测试了Erlangshen-DeBERTa架构在官方提供的评测pipline上的表现
+2.测试了Erlangshen-DeBERTa预训练模型在官方提供的评测pipline上的表现
 
 3.参考官方给的一系列BabyLM，准备用DeBERTa-v2架构尝试构建不同规模的模型
 
