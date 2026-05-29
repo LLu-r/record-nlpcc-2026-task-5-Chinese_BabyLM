@@ -1,5 +1,13 @@
 # record-nlpcc-2026-task-5-Chinese_BabyLM
 
+## 到目前为止，我的主要工作
+
+1.学习和了解BabyLM测评大赛的规则和评测指标
+
+2.测试了Erlangshen-DeBERTa架构在官方提供的评测pipline上的表现
+
+3.参考官方给的一系列BabyLM，准备用DeBERTa-v2架构尝试构建不同规模的模型
+
 ## 目标
 
 与国际 BabyLM 一致：在受人类认知启发的严格数据预算下，探索如何高效训练中文语言模型，缩小 AI 与人类儿童在语言习得过程中的数据效率差距。
