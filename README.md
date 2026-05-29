@@ -6,7 +6,7 @@
 
 2.测试了Erlangshen-DeBERTa预训练模型在官方提供的评测pipline上的表现
 
-3.参考官方给的一系列BabyLM，准备用DeBERTa-v2架构尝试构建不同规模的模型
+3.参考官方给的一系列BabyLM，准备用DeBERTa-v2架构尝试构建不同规模的模型，并测试它们的效果
 
 ## 目标
 
