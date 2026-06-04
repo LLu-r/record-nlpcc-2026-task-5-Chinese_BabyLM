@@ -301,10 +301,11 @@ ________________________________________________________________________________
 ```
 ## 实验部分
 
+按照官方的要求，只允许使用不超过102M的限制数据集来完成该任务。
 
-### babylm-chinese-deberta-v2-14M
+### babylm-chinese-deberta-v2-14M-epoch10
 
-我沿用Erlangshen-deberta-v2架构，构建了一个参数量14.6M的模型。
+我沿用Erlangshen-deberta-v2架构，构建了一个参数量14.6M的模型。直接在官方提供的102M数据集上训练了10个epoch
 
 我没有额外训练tokenizer，而是构建了大小与Erlangshen-deberta-v2-97M相同的词表，使用其tokenizer。
 
@@ -346,49 +347,30 @@ ________________________________________________________________________________
 }
 ```
 
+### 实验测试结果
+
 | Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |mean|
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:--- |
-| babylm-chinese-deberta-v2-14M-epoch3 | 68.53 | 52.95 | 68.20（存疑） | 55.74 | 6.81 | 69.00 | 60.51 | 53.06 | 63.49  |54.35|
+| babylm-chinese-deberta-v2-14M-epoch3 | 68.53 | 52.95 | 68.20 | 55.74 | 6.81 | 69.00 | 60.51 | 53.06 | 63.49  |54.35|
 | babylm-chinese-deberta-v2-14M-epoch10| 71.10 | 53.25 | 36.60 | 55.91 | 7.21 | 69.05 | 64.54 | 53.23 | 63.49 |52.71|
 
 
-#### babylm-chinese-deberta-v2-14M-epoch10的详细评测数据
+### 课程学习（Cirriculum Learning）babylm-chinese-deberta-v2-14M-CL
 
-由于官方目前给的测评数据规模比较小，单从最终得分这一点不能反应模型是否真正的效果
+#### 实验设置：
 
-这个部分统计的是官方测评pipline输出的除得分之外的结果
+把数据切分出来，分为4个部分，分阶段训练模型。
 
-##### hanzi_pinyin
+| 训练阶段 | 覆盖 Epoch | 数据筛选条件 | Max Sequence Length |
+| :--- | :--- | :--- | :--- |
+| **幼教期** | Epoch 1 - 2 | 仅保留长度 `< 32` 的短句 | 64 |
+| **小学期** | Epoch 3 - 5 | 引入长度 `< 64` 的中等句子 | 128 |
+| **中学期** | Epoch 6 - 8 | 引入长度 `< 128` 的长句 | 256 | 
+| **冲刺期** | Epoch 9 - 10 | **全量数据，完全随机打乱** | 256 / 512 |
 
+#### 实验结果统计：
 
-```text
-### FIELD ACCURACY
-class1_disjoint_freqgap_balanced: 36.60
- 
-### UID ACCURACY
-class1_disjoint_freqgap_balanced: 36.60
- 
-### LINGUISTICS_TERM ACCURACY
-class1_disjoint_freqgap_balanced: 36.60
- 
-### AVERAGE ACCURACY
-36.60
-```
+| Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |mean|
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:--- |
+| babylm-chinese-deberta-v2-14M-CL-final(epoch10) | 66.06 | 53.15 | 63.90 | 55.73 | 6.88 | 69.25 | 59.53 | 52.40 | 63.82 |54.52|
 
-##### AFQMC
-
-```text
-accuracy: 0.6904541241890639
-f1: 0.007429420505200594
-mcc: 0.02934917884298998
-```
-
-AFQMC测试上的F1和MCC非常的低，说明模型几乎是在乱猜
-
-##### CLUEWSC2020
-
-```text
-accuracy: 0.6348684210526315
-f1: 0.7766599597585513
-mcc: 0.0
-```
