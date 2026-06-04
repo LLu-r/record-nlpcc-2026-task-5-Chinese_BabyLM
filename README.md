@@ -1,12 +1,6 @@
 # record-nlpcc-2026-task-5-Chinese_BabyLM
 
-## 到目前为止，我的主要工作
-
-1.学习和了解BabyLM测评大赛的规则和评测指标
-
-2.测试了Erlangshen-DeBERTa预训练模型在官方提供的评测pipline上的表现
-
-3.参考官方给的一系列BabyLM，准备用DeBERTa-v2架构尝试构建不同规模的模型，并测试它们的效果
+## babylm-chinese-14M实验结果在最后
 
 ## 目标
 
@@ -137,11 +131,11 @@ https://huggingface.co/datasets/chinese-babylm-org/babylm-zho-100M
 
 ### Erlangshen-DeBERTa测试结果
 
-| Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-|  Erlangshen-DeBERTa-v2-97M-Chinese | 84.45 | 57.80 | 30.90 | 55.67 | 11.28 | - | - | - | - |
-|  Erlangshen-DeBERTa-v2-320M-Chinese | 85.87 | 63.45 | 33.00 | 55.73 | 10.67 | - | - | - | - |
-|  Erlangshen-DeBERTa-v2-710M-Chinese | 85.21 | 64.25 | 24.70 | 55.87 | 11.56 | - | - | - | - |
+| Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |mean|
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:--- |
+|  Erlangshen-DeBERTa-v2-97M-Chinese | 84.45 | 57.80 | 30.90 | 55.67 | 11.28 | 72.01 | 75.97 | 56.56 | 64.47 |56.57|
+|  Erlangshen-DeBERTa-v2-320M-Chinese | 85.87 | 63.45 | 33.00 | 55.73 | 10.67 | 76.51 | 81.46 | 58.09 | 88.49 |61.47|
+|  Erlangshen-DeBERTa-v2-710M-Chinese | 85.21 | 64.25 | 24.70 | 55.87 | 11.56 | 74.63 | 80.78 | 57.13 | 63.49 |57.51|
 
 注：微调部分出错，f1=0，模型输出的分类标签全为0，在排查问题。
 
@@ -166,7 +160,7 @@ self.causal: bool = config.causal
 
 ### 模型架构选择
 
-既然DeBERTa架构在目前已经评测的任务上表现比较好，后续我打算尝试不同大小的DeBERTa-v2架构在Chinese BabyLM上的表现。
+既然DeBERTa架构在中文最小对评测上表现比较好，后续我打算尝试不同大小的DeBERTa-v2架构在Chinese BabyLM上的表现。
 
 ### 模型大小选择
 
@@ -302,5 +296,99 @@ hidden_dropout_prob & attention_probs_dropout_prob: 0.1理由：预训练防过�
 
 认知赛道调优： 隐藏层的选择与特征提取方式（例如平均池化、特定层的表征）对 fMRI 对齐成绩有显著影响。
 
+```text
+______________________________________________________________________________________________
+```
+## 实验部分
 
 
+### babylm-chinese-deberta-v2-14M
+
+我沿用Erlangshen-deberta-v2架构，构建了一个参数量14.6M的模型。
+
+我没有额外训练tokenizer，而是构建了大小与Erlangshen-deberta-v2-97M相同的词表，使用其tokenizer。
+
+具体架构如下:
+
+```json
+{
+  "architecture_2_config_class": {
+    "DebertaV2ForMaskedLM": "DebertaV2Config"
+  },
+  "architectures": [
+    "DebertaV2ForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 256,
+  "initializer_range": 0.02,
+  "intermediate_size": 1024,
+  "layer_norm_eps": 1e-7,
+  "max_position_embeddings": 512,
+  "max_relative_positions": 512,
+  "model_type": "deberta-v2",
+  "num_attention_heads": 8,
+  "num_hidden_layers": 12,
+  "pad_token_id": 0,
+  "pooler_hidden_size": 256,
+  "pooler_size_per_head": 128,
+  "position_biased_input": false,
+  "pos_att_type": [
+    "c2p",
+    "p2c"
+  ],
+  "relative_attention": true,
+  "talking_head": false,
+  "type_vocab_size": 0,
+  "vocab_size": 12800,
+  "tie_word_embeddings": true
+}
+```
+
+| Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |mean|
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:--- |
+| babylm-chinese-deberta-v2-14M-epoch3 | 68.53 | 52.95 | 68.20（存疑） | 55.74 | 6.81 | 69.00 | 60.51 | 53.06 | 63.49  |54.35|
+| babylm-chinese-deberta-v2-14M-epoch10| 71.10 | 53.25 | 36.60 | 55.91 | 7.21 | 69.05 | 64.54 | 53.23 | 63.49 |52.71|
+
+
+#### babylm-chinese-deberta-v2-14M-epoch10的详细评测数据
+
+由于官方目前给的测评数据规模比较小，单从最终得分这一点不能反应模型是否真正的效果
+
+这个部分统计的是官方测评pipline输出的除得分之外的结果
+
+##### hanzi_pinyin
+
+
+```text
+### FIELD ACCURACY
+class1_disjoint_freqgap_balanced: 36.60
+ 
+### UID ACCURACY
+class1_disjoint_freqgap_balanced: 36.60
+ 
+### LINGUISTICS_TERM ACCURACY
+class1_disjoint_freqgap_balanced: 36.60
+ 
+### AVERAGE ACCURACY
+36.60
+```
+
+##### AFQMC
+
+```text
+accuracy: 0.6904541241890639
+f1: 0.007429420505200594
+mcc: 0.02934917884298998
+```
+
+AFQMC测试上的F1和MCC非常的低，说明模型几乎是在乱猜
+
+##### CLUEWSC2020
+
+```text
+accuracy: 0.6348684210526315
+f1: 0.7766599597585513
+mcc: 0.0
+```
