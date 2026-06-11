@@ -301,9 +301,9 @@ ________________________________________________________________________________
 ```
 ## 实验部分
 
-按照官方的要求，只允许使用不超过102M的限制数据集来完成该任务。
+按照官方的要求，只允许使用不超过102M的限制数据集来完成该任务。所以continue training没有继续。
 
-### babylm-chinese-deberta-v2-14M-epoch10
+### babylm-chinese-deberta-v2-14M-epoch10(统计UNK之前的实验结果)
 
 我沿用Erlangshen-deberta-v2架构，构建了一个参数量14.6M的模型。直接在官方提供的102M数据集上训练了10个epoch
 
@@ -358,7 +358,7 @@ ________________________________________________________________________________
 
 ### 课程学习（Cirriculum Learning）babylm-chinese-deberta-v2-14M-CL
 
-#### 实验设置：
+#### 测试阶段实验设置：
 
 把数据切分出来，分为4个部分，分阶段训练模型。
 
@@ -367,11 +367,103 @@ ________________________________________________________________________________
 | **幼教期** | Epoch 1 - 2 | 仅保留长度 `< 32` 的短句 | 64 |
 | **小学期** | Epoch 3 - 5 | 引入长度 `< 64` 的中等句子 | 128 |
 | **中学期** | Epoch 6 - 8 | 引入长度 `< 128` 的长句 | 256 | 
-| **冲刺期** | Epoch 9 - 10 | **全量数据，完全随机打乱** | 256 / 512 |
+| **冲刺期** | Epoch 9 - 10 | **全量数据** | 512 |
 
 #### 实验结果统计：
+
+//统计UNK之前
 
 | Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |mean|
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:--- |
 | babylm-chinese-deberta-v2-14M-CL-final(epoch10) | 66.06 | 53.15 | 63.90 | 55.73 | 6.88 | 69.25 | 59.53 | 52.40 | 63.82 |54.52|
 
+#### 统计UNK之后的结果：
+
+**重做tokenizer再训练**
+
+| Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |mean|
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:--- |
+| babylm-chinese-deberta-v2-final-lr1e-4-epoch10|59.02|49.35|50.25|55.79|6.86|69.05|59.86|51.99|63.49| 51.74 |
+| **babylm-chinese-deberta-v2-final-lr5e-4-epoch10**|69.06|57.30|47.20|55.69|7.35|69.44|65.86|53.45|63.49|54.32|
+
+&nbsp;
+
+**学习率 LR= 5e-4 增加训练轮数**
+
+#### 实验设置：
+
+| 训练阶段 | 覆盖 Epoch | 数据筛选条件 | Max Sequence Length |
+| :--- | :--- | :--- | :--- |
+| **幼教期** | Epoch 1 - 2 | 仅保留长度 `< 32` 的短句 | 64 |
+| **小学期** | Epoch 3 - 5 | 引入长度 `< 64` 的中等句子 | 128 |
+| **中学期** | Epoch 6 - 10 | 引入长度 `< 128` 的长句 | 256 | 
+| **冲刺期** | Epoch 11 - 30 | **全量数据** | 512 |
+
+#### 实验结果统计：
+
+| Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |mean|
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:--- |
+|babylm-chinese-deberta-v2-final-lr5e-4-epoch30(fine-tuning LR=3e-5)|75.23|61.00|51.40|55.68|8.50|70.57|67.66|54.25|63.49|56.42|
+|babylm-chinese-deberta-v2-final-lr5e-4-epoch30(fine-tuning LR=2e-5)|↑|↑|↑|↑|↑|70.44|68.00|54.16|63.49|56.43|
+
+
+**fine-tuning测评阶段多轮调试后的结果**
+
+| Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |mean|
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:--- |
+|babylm-chinese-deberta-v2-final-lr5e-4-epoch30|75.23|61.00|51.40|55.68|8.50|71.11|68.00|54.69|64.14|56.64|
+
+```yaml
+finetune_hparams:
+  lr: 2.0e-5
+  batch_size: 32
+  max_epochs: 10
+  sequence_length: 128
+  seed: 42
+
+  task_overrides:
+    afqmc:
+      lr: 2.0e-5
+      batch_size: 16
+      max_epochs: 15
+    ocnli:
+      lr: 2e-5
+      batch_size: 32
+      max_epochs: 10
+    tnews:
+      lr: 3.0e-5
+      batch_size: 32
+      max_epochs: 15
+    cluewsc2020:
+      lr: 5.0e-5
+      sequence_length: 256
+      batch_size: 8
+      max_epochs: 30
+```
+
+
+&nbsp;
+
+### 官方给出的babylm平均分较高的模型
+
+| Model | zhoblimp | hanzi_struc | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc20 | mean |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| babylm-chinese-bert-14m-epoch10 | 74.80 | 53.30 | 39.90 | 55.82 | 9.27 | 69.00 | 60.07 | 54.65 | 64.47 | 53.48 |
+| babylm-chinese-bert-14m-epoch20 | 75.82 | 54.45 | 40.10 | 55.89 | 9.46 | 69.00 | 61.66 | 54.96 | 63.82 | 53.91 |
+
+### baseline中在大语料上训练的平均得分最高的几个模型
+
+| Model | zhoblimp | hanzi_struc | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc20 | mean |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| Qwen3-0.6B | 77.62 | 59.85 | 49.80 | 55.00 | 10.40 | 71.57 | 75.08 | 58.10 | 71.71 | 58.79 |
+| bert-base-chinese | 83.26 | 57.25 | 47.00 | 56.00 | 10.50 | 72.75 | 74.34 | 57.54 | 72.37 | **59.00** |
+| chinese-bert-wwm-ext | 84.86 | 58.05 | 29.60 | 55.80 | 10.40 | 73.15 | 75.36 | 58.32 | 74.34 | 57.76 |
+| xlm-roberta-base | 84.00 | 57.90 | 37.90 | 55.60 | 10.60 | 73.03 | 73.93 | 56.05 | 63.49 | 56.94 |
+
+
+
+### 后续任务
+
+官方明确指出，模型必须在AoE时间6月11日23：59前（北京时间6月12日19:59）上传至huggingface，此后会公布最终评比测试数据和pipline。参赛者将最终的分数统计并上传到Leaderboard。
+
+主办方会公布4个排名：3个赛道各一个排名+总分排名。6月20日后联系每个排名榜上前三名的队伍进行复现。
