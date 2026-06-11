@@ -409,9 +409,7 @@ ________________________________________________________________________________
 
 **fine-tuning测评阶段多轮调试后的结果**
 
-| Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |mean|
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:--- |
-|babylm-chinese-deberta-v2-final-lr5e-4-epoch30|75.23|61.00|51.40|55.68|8.50|71.11|68.00|54.69|64.14|56.64|
+修改pipline配置
 
 ```yaml
 finetune_hparams:
@@ -440,6 +438,12 @@ finetune_hparams:
       batch_size: 8
       max_epochs: 30
 ```
+
+| Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |mean|
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:--- |
+|babylm-chinese-deberta-v2-final-lr5e-4-epoch30|75.23|61.00|51.40|55.68|8.50|71.11|68.00|54.69|64.14|56.64|
+
+
 
 
 &nbsp;
