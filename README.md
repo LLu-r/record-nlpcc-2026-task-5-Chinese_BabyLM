@@ -427,7 +427,7 @@ finetune_hparams:
       batch_size: 16
       max_epochs: 15
     ocnli:
-      lr: 2e-5
+      lr: 2.0e-5
       batch_size: 32
       max_epochs: 10
     tnews:
