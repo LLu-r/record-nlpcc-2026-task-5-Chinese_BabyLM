@@ -438,6 +438,7 @@ finetune_hparams:
       batch_size: 8
       max_epochs: 30
 ```
+### babylm-chinese-deberta-v2-14M-CL
 
 | Model | zhoblimp | hanzi_structure | hanzi_pinyin | word_fmri | fmri | afqmc | ocnli | tnews | cluewsc2020 |mean|
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |:--- |
