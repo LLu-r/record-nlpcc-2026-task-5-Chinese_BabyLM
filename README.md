@@ -472,3 +472,10 @@ finetune_hparams:
 官方明确指出，模型必须在AoE时间6月11日23：59前（北京时间6月12日19:59）上传至huggingface，此后会公布最终评比测试数据和pipline。参赛者将最终的分数统计并上传到Leaderboard。
 
 主办方会公布4个排名：3个赛道各一个排名+总分排名。6月20日后联系每个排名榜上前三名的队伍进行复现。
+
+
+### final_test结果
+| Model |zhoblimp|xcomps_zh|hanzi_structure|hanzi_pinyin|hanzi_structure_hidden|hanzi_pinyin_hidden|word_fmri|fmri|afqmc|ocnli|tnews|mean|cluewsc2020|c3|diagnostic_nli|
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+|babylm-chinese-deberta-v2-final-lr5e-4-epoch30|75.23|57.85|61.00|51.40|60.25|50.20|56.02|10.55|71.11|68.00|54.69|64.14|42.45|54.48|55.53|
+
