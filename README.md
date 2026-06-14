@@ -475,7 +475,7 @@ finetune_hparams:
 
 
 ### final_test结果
-| Model |zhoblimp|xcomps_zh|hanzi_structure|hanzi_pinyin|hanzi_structure_hidden|hanzi_pinyin_hidden|word_fmri|fmri|afqmc|ocnli|tnews|mean|cluewsc2020|c3|diagnostic_nli|
+| Model |zhoblimp|xcomps_zh|hanzi_structure|hanzi_pinyin|hanzi_structure_hidden|hanzi_pinyin_hidden|word_fmri|fmri|afqmc|ocnli|tnews|cluewsc2020|c3|diagnostic_nli|mean|
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 |babylm-chinese-deberta-v2-final-lr5e-4-epoch30|75.23|57.85|61.00|51.40|60.25|50.20|56.02|10.55|71.11|68.00|54.69|64.14|42.45|54.48|55.53|
 
